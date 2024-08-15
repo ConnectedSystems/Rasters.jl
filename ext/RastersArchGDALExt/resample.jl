@@ -12,7 +12,13 @@ function resample(A::RasterStackOrArray;
     (isnothing(size) || isnothing(res)) || _size_and_res_error()
 
     # Flags to send to `warp`, then to GDAL
-    flags = Dict{Symbol,Any}()
+    if :filename in keys(kw) && occursin(".tif", kw[:filename])
+        flags = Dict{Symbol,Any}(
+            :of=>"COG"  # default to producing COGs
+        )
+    else
+        flags = Dict{Symbol,Any}()
+    end
 
     # Method
     flags[:r] = method
