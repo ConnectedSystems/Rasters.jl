@@ -6,7 +6,7 @@ end
 function resample(xs::Union{Tuple,NamedTuple}; to=first(xs), kw...)
     map(x -> resample(x; to, kw...), xs)
 end
-function resample(A::RasterStackOrArray; 
+function resample(A::RasterStackOrArray;
     to=nothing, res=nothing, crs=nothing, size=nothing, method=:near, kw...
 )
     (isnothing(size) || isnothing(res)) || _size_and_res_error()
@@ -43,7 +43,7 @@ function resample(A::RasterStackOrArray;
     end
 
     # CRS
-    crs = if isnothing(crs) 
+    crs = if isnothing(crs)
         if to isa Extents.Extent
             nothing
         else
@@ -98,7 +98,7 @@ function resample(A::RasterStackOrArray;
         resampled = setcrs(resampled, crs)
     end
 
-    # if only to is provided and it has dims, make sure dims are the exact same 
+    # if only to is provided and it has dims, make sure dims are the exact same
     if onlyto
         newdims = (commondims(to, XDim, YDim)..., otherdims(A, (XDim, YDim))...)
         resampled = rebuild(resampled; dims =newdims)
