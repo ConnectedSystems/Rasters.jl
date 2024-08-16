@@ -7,17 +7,17 @@ function resample(xs::Union{Tuple,NamedTuple}; to=first(xs), kw...)
     map(x -> resample(x; to, kw...), xs)
 end
 function resample(A::RasterStackOrArray;
-    to=nothing, res=nothing, crs=nothing, size=nothing, method=:near, kw...
+    to=nothing, res=nothing, crs=nothing, size=nothing, method=:near, format=nothing, kw...
 )
     (isnothing(size) || isnothing(res)) || _size_and_res_error()
 
     # Flags to send to `warp`, then to GDAL
-    if :filename in keys(kw) && occursin(".tif", kw[:filename])
-        flags = Dict{Symbol,Any}(
-            :of=>"COG"  # default to producing COGs
-        )
-    else
+    if isnothing(format)
         flags = Dict{Symbol,Any}()
+    else
+        flags = Dict{Symbol,Any}(
+            :of=>format
+        )
     end
 
     # Method
